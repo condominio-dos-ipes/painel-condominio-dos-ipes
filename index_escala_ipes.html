@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Escala da Semana · Condomínio dos Ipês</title>
+<style>
+/* Layout: cabeçalho verde-ipê, faixa de resumo, duas abas (Pendências / Funcionários) em coluna única que vira 2 colunas no desktop */
+:root{
+  --bg:#F7F3EC; --surface:#FFFFFF; --ink:#2B2620; --ink2:#6B6455; --line:#DAD3C1; --title:#1F3D2B;
+  --green:#1F3D2B; --green-ink:#FFFFFF; --ipe:#E3A72E; --ipe-ink:#3A2A04;
+  --ok:#2E6B3E; --ok-bg:#E6F0E3; --warn:#8C650F; --warn-bg:#FCEFDA; --bad:#A32D2D; --bad-bg:#FBE7E3; --info:#8C650F; --info-bg:#FCEFDA;
+  --night:#2B2620; --night-ink:#F7F3EC;
+  --font:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; --head:Georgia,'Times New Roman',serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#16140F; --surface:#211E17; --ink:#F1EBDD; --ink2:#B3AB98; --line:#3A3528; --title:#F1EBDD;
+  --green:#2F5A41; --green-ink:#FFFFFF; --ipe:#E3A72E; --ipe-ink:#2A1E03;
+  --ok:#7CC48F; --ok-bg:#1B2F21; --warn:#E3B04F; --warn-bg:#3A2F12; --bad:#EF8B8B; --bad-bg:#401D1D; --info:#E3B04F; --info-bg:#3A2F12;
+  --night:#0E0D0A; --night-ink:#F1EBDD; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#16140F; --surface:#211E17; --ink:#F1EBDD; --ink2:#B3AB98; --line:#3A3528; --title:#F1EBDD;
+  --green:#2F5A41; --green-ink:#FFFFFF; --ipe:#E3A72E; --ipe-ink:#2A1E03;
+  --ok:#7CC48F; --ok-bg:#1B2F21; --warn:#E3B04F; --warn-bg:#3A2F12; --bad:#EF8B8B; --bad-bg:#401D1D; --info:#E3B04F; --info-bg:#3A2F12;
+  --night:#0E0D0A; --night-ink:#F1EBDD; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.wrap{max-width:1040px;margin:0 auto}
+.logo-stem{stroke:var(--title)}
+header{padding:26px 0 0}
+header .left{display:flex;align-items:center;gap:16px}
+h1{font-family:var(--head);font-weight:600;font-size:25px;margin:0;letter-spacing:-.2px;color:var(--title);text-wrap:balance}
+.sub{color:var(--ink2);font-size:13.5px;margin-top:3px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:16px}
+.stat{background:rgba(255,255,255,.1);border-radius:8px;padding:8px 10px;min-width:0}
+.stat b{display:block;font-family:var(--head);font-size:22px;font-variant-numeric:tabular-nums}
+.stat span{font-size:12px;opacity:.85}
+.stat.hot{background:var(--ipe);color:var(--ipe-ink)}
+#v-adm .stats{margin:0 0 16px}
+#v-adm .stat{background:var(--surface);border:1px solid var(--line)}
+#v-adm .stat span{opacity:1;color:var(--ink2)}
+#v-adm .stat.hot,#v-adm .stat.hot span{background:var(--ipe);border-color:var(--ipe);color:var(--ipe-ink)}
+nav{display:flex;gap:28px;margin-top:20px;border-bottom:1px solid var(--line)}
+nav button{font:inherit;font-size:14.5px;color:var(--ink2);background:transparent;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:10px 2px;cursor:pointer}
+nav button:hover{color:var(--title)}
+nav button[aria-selected="true"]{color:var(--title);border-bottom-color:var(--ipe);font-weight:600}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ipe);outline-offset:2px}
+main{padding-top:18px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:5px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--green);color:var(--green-ink);border-color:var(--green)}
+.btn{font:inherit;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 12px;cursor:pointer}
+.btn.pri{background:var(--ipe);color:var(--ipe-ink);border-color:var(--ipe)}
+.btn.go{background:var(--green);color:var(--green-ink);border-color:var(--green)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn.ghost{background:transparent}
+h2{font-family:var(--head);font-size:15px;margin:22px 0 8px;display:flex;align-items:center;gap:8px}
+h2 .n{font-size:12px;background:var(--line);color:var(--ink2);border-radius:99px;padding:1px 8px}
+h2.conf .n{background:var(--ipe);color:var(--ipe-ink)}
+.list{display:grid;gap:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:6px 12px;min-width:0}
+.card.pend{border-color:var(--ipe);box-shadow:0 0 0 1px var(--ipe) inset}
+.card .t{font-weight:600;min-width:0;overflow-wrap:anywhere}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;grid-column:1;min-width:0}
+.card .note{grid-column:1/-1;color:var(--ink2);font-size:13px;overflow-wrap:anywhere}
+.card .act{grid-column:2;grid-row:1/3;display:flex;flex-direction:column;gap:6px;align-items:stretch;justify-content:flex-start}
+.tag{font-size:12px;border-radius:6px;padding:1px 8px;background:var(--line);color:var(--ink2)}
+.tag.own{background:var(--info-bg);color:var(--info);font-weight:600}
+.tag.alta{background:var(--bad-bg);color:var(--bad);font-weight:600}
+.tag.media{background:var(--warn-bg);color:var(--warn)}
+.tag.ok{background:var(--ok-bg);color:var(--ok);font-weight:600}
+details.done summary{cursor:pointer;font-family:var(--head);font-weight:700;font-size:15px;margin:22px 0 8px}
+.empty{border:1px dashed var(--line);border-radius:10px;padding:26px 18px;text-align:center;color:var(--ink2);background:var(--surface)}
+.days{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px}
+.day{font:inherit;flex:1 0 auto;min-width:58px;text-align:center;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 8px;cursor:pointer}
+.day small{display:block;color:var(--ink2);font-variant-numeric:tabular-nums}
+.day[aria-selected="true"]{background:var(--green);color:var(--green-ink);border-color:var(--green)}
+.day[aria-selected="true"] small{color:var(--green-ink);opacity:.8}
+.day.today b::after{content:" •";color:var(--ipe)}
+.shifts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:760px){.shifts{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.card{grid-template-columns:1fr}.card .act{grid-column:1;grid-row:auto;flex-direction:row}}
+.shift{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0}
+.shift .hd{padding:12px 14px;background:var(--green);color:var(--green-ink)}
+.shift.night .hd{background:var(--night);color:var(--night-ink)}
+.shift .hd b{font-family:var(--head);font-size:17px;display:block}
+.shift .hd span{opacity:.85;font-size:13px}
+.task{display:grid;grid-template-columns:64px 1fr auto;gap:10px;padding:10px 14px;border-top:1px solid var(--line);align-items:start}
+.task .h{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink2);font-size:13px;line-height:1.5}
+.task .h em{display:block;font-style:normal;font-weight:400;font-size:12px}
+.task .tt{overflow-wrap:anywhere}
+.task .nn{color:var(--ink2);font-size:12.5px}
+.task.done .tt{text-decoration:line-through;color:var(--ink2)}
+.task input[type=checkbox]{width:22px;height:22px;accent-color:var(--ok);margin:0}
+.off{padding:20px 14px;color:var(--ink2)}
+.legend{color:var(--ink2);font-size:12.5px;margin-top:12px}
+.ov{position:fixed;inset:0;background:rgba(10,20,15,.55);display:flex;align-items:flex-end;justify-content:center;z-index:20;padding:0 0 env(safe-area-inset-bottom,0px)}
+.ov[hidden]{display:none!important}
+.sheet{background:var(--surface);width:min(520px,100%);max-height:92vh;overflow:auto;border-radius:16px 16px 0 0;padding:18px;display:grid;gap:10px}
+@media (min-width:640px){.ov{align-items:center}.sheet{border-radius:16px}}
+.sheet h3{margin:0;font-family:var(--head);font-size:18px}
+label{display:grid;gap:3px;font-weight:600;font-size:13px}
+input,select,textarea{font:inherit;font-weight:400;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row2>*{min-width:0}
+.dias{display:flex;flex-wrap:wrap;gap:6px}
+.dias label{display:flex;gap:4px;align-items:center;font-weight:500;border:1px solid var(--line);border-radius:99px;padding:3px 10px}
+.dias input{width:auto}
+.fr{display:flex;gap:8px;justify-content:space-between;margin-top:4px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:99px;z-index:30;max-width:90vw}
+.note-ro{background:var(--info-bg);color:var(--info);border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:13px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+.task.now{background:var(--warn-bg)}
+.task input[type=checkbox]{cursor:pointer}
+.upd{color:var(--ink2);font-size:12.5px;margin-top:10px}
+</style></head><body>
+<div class="wrap">
+<header><div class="left">
+<svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" style="flex:none"><circle cx="20" cy="20" r="19" fill="none" stroke="#E3A72E" stroke-width="2"/><path d="M20 30 L20 14" stroke="#1F3D2B" stroke-width="2" fill="none" class="logo-stem"/><circle cx="20" cy="12" r="4" fill="#E3A72E"/><circle cx="14" cy="17" r="3" fill="#E3A72E"/><circle cx="26" cy="17" r="3" fill="#E3A72E"/></svg>
+<div><h1>Afazeres da semana · Condomínio dos Ipês</h1><div class="sub" id="hoje"></div></div></div></header>
+<main><div class="days" id="dias"></div><div id="turnos"></div><div class="legend" id="leg"></div><div class="upd">Atualizado em 17/11/2026</div></main></div>
+<script>
+const ROT=[{"dias": [2, 3, 5, 6], "fim": "09:40", "inicio": "08:40", "nota": "", "quem": "fred", "titulo": "Limpeza da área da piscina e entorno", "id": "r03"}, {"dias": [1, 2, 3, 4, 5], "fim": "16:00", "inicio": "15:30", "nota": "", "quem": "fred", "titulo": "Regar as plantas e cuidar do jardim", "id": "r04"}, {"dias": [1, 2, 3, 4, 5, 6], "fim": "08:40", "inicio": "08:10", "nota": "Logo depois de ligar a bomba", "quem": "fred", "titulo": "Recolher o lixo das áreas comuns", "id": "r05"}, {"dias": [1], "fim": "16:45", "inicio": "16:00", "nota": "Toda segunda-feira", "quem": "fred", "titulo": "Verificar a caixa d'água e as bombas (piscina e recalque)", "id": "r07"}, {"dias": [3], "fim": "16:45", "inicio": "16:00", "nota": "Toda quarta-feira", "quem": "fred", "titulo": "Verificar o funcionamento das câmeras de segurança", "id": "r08"}, {"dias": [1, 2, 3, 4, 5], "fim": "18:00", "inicio": "16:45", "nota": "", "quem": "fred", "titulo": "Recolher o lixo de novo e conferir as áreas comuns antes de sair", "id": "r09"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "19:15", "inicio": "19:00", "nota": "A bomba é ligada por quem chega no turno", "quem": "noite", "titulo": "Ligar a bomba e verificar portões e cadeados fechados", "id": "r10"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "19:30", "inicio": "19:15", "nota": "", "quem": "noite", "titulo": "Verificar se a iluminação externa está acesa", "id": "r11"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "06:30", "inicio": "19:30", "nota": "Durante todo o turno. Registrar ocorrências no caderno", "quem": "noite", "titulo": "Controle de entrada e saída de visitantes e prestadores", "id": "r12"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "21:30", "inicio": "21:00", "nota": "A cada 2 horas", "quem": "noite", "titulo": "Ronda de segurança pelo perímetro", "id": "r13"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "22:15", "inicio": "22:00", "nota": "", "quem": "noite", "titulo": "Verificar as câmeras de segurança", "id": "r14"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "23:30", "inicio": "23:00", "nota": "A cada 2 horas", "quem": "noite", "titulo": "Ronda de segurança pelo perímetro", "id": "r15"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "01:30", "inicio": "01:00", "nota": "Madrugada, a cada 2 horas", "quem": "noite", "titulo": "Ronda de segurança pelo perímetro", "id": "r16"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "03:30", "inicio": "03:00", "nota": "Madrugada, a cada 2 horas", "quem": "noite", "titulo": "Ronda de segurança pelo perímetro", "id": "r17"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "04:15", "inicio": "04:00", "nota": "Madrugada", "quem": "noite", "titulo": "Verificar as câmeras de segurança", "id": "r18"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "05:30", "inicio": "05:00", "nota": "Madrugada, a cada 2 horas", "quem": "noite", "titulo": "Ronda de segurança pelo perímetro", "id": "r19"}, {"dias": [0, 1, 2, 3, 4, 5, 6], "fim": "07:00", "inicio": "06:30", "nota": "Avisar o Fred sobre qualquer ocorrência", "quem": "noite", "titulo": "Fechar o caderno de ocorrências e passar o turno", "id": "r20"}, {"dias": [1, 4], "fim": "09:40", "inicio": "08:40", "nota": "Toda segunda e quinta, cedo, para o produto agir o dia todo", "quem": "fred", "titulo": "Limpar a piscina e aplicar o produto (primeira atividade do dia)", "id": "r21"}, {"dias": [1, 3, 5], "fim": "12:00", "inicio": "09:40", "nota": "Lavar banheiro, grelha da churrasqueira e piso; esfregar a volta da piscina; varrer e passar pano", "quem": "fred", "titulo": "Limpeza pesada da área de lazer", "id": "r23"}, {"dias": [2, 4, 6], "fim": "10:30", "inicio": "09:40", "nota": "Todos os dias; nos dias de limpeza pesada já faz parte dela", "quem": "fred", "titulo": "Varrer e passar pano nas áreas comuns", "id": "r24"}, {"dias": [6], "fim": "12:00", "inicio": "11:45", "nota": "Todo dia, porque o uso é grande", "quem": "fred", "titulo": "Lavar e limpar o chão do banheiro da guarita", "id": "r26"}, {"dias": [6], "fim": "11:45", "inicio": "11:15", "nota": "", "quem": "fred", "titulo": "Regar as plantas e cuidar do jardim", "id": "r27"}, {"dias": [1, 2, 3, 4, 5, 6], "fim": "08:10", "inicio": "08:00", "nota": "O vigia da noite liga a bomba quando chega no turno dele", "quem": "fred", "titulo": "Ligar a bomba ao chegar", "id": "r28"}, {"dias": [1, 2, 3, 4, 5], "fim": "15:30", "inicio": "15:00", "nota": "Todo dia, porque o uso é grande", "quem": "fred", "titulo": "Lavar e limpar o chão do banheiro da guarita", "id": "r29"}, {"dias": [2, 4, 6], "fim": "11:15", "inicio": "10:30", "nota": "", "quem": "fred", "titulo": "Varrer as calçadas", "id": "r30"}];
+const DN=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],DS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const NOITE={0:'Roberto',1:'Roberto',2:'Márcio',3:'Roberto',4:'Márcio',5:'Roberto',6:'Márcio'};
+const FRED={0:null,1:'08:00–12:00 e 14:00–18:00',2:'08:00–12:00 e 14:00–18:00',3:'08:00–12:00 e 14:00–18:00',4:'08:00–12:00 e 14:00–18:00',5:'08:00–12:00 e 14:00–18:00',6:'08:00–12:00'};
+const $=s=>document.querySelector(s);
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+const hoje=new Date();let dia=hoje.getDay();
+const mon=new Date(hoje);mon.setDate(hoje.getDate()-((hoje.getDay()+6)%7));
+const dateOf=d=>{const x=new Date(mon);x.setDate(mon.getDate()+((d+6)%7));return x};
+const hkey=t=>{const[h,m]=t.split(':').map(Number);return(h<7?h+24:h)*60+m};
+const mem=(()=>{try{return JSON.parse(localStorage.getItem('ipes_checks')||'{}')}catch(e){return{}}})();
+function save(){try{localStorage.setItem('ipes_checks',JSON.stringify(mem))}catch(e){}}
+$('#hoje').textContent=hoje.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'});
+function renderDias(){const b=$('#dias');b.textContent='';[1,2,3,4,5,6,0].forEach(d=>{
+ const x=el('button','day'+(d===hoje.getDay()?' today':''));x.setAttribute('aria-selected',String(dia===d));
+ x.append(el('b',null,DS[d]),el('small',null,dateOf(d).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})));
+ x.onclick=()=>{dia=d;render()};b.appendChild(x)})}
+function shift(q,dow){
+ const box=el('div','shift'+(q==='noite'?' night':''));const hd=el('div','hd');
+ if(q==='fred')hd.append(el('b',null,'Fred · turno do dia'),el('span',null,FRED[dow]||'Folga'));
+ else hd.append(el('b',null,'Noite · '+NOITE[dow]),el('span',null,'19:00 às 07:00 (início na '+DN[dow].toLowerCase()+(dow===0||dow===6?'':'-feira')+')'));
+ box.appendChild(hd);
+ if(q==='fred'&&!FRED[dow]){box.appendChild(el('div','off','Fred está de folga neste dia.'));return box}
+ const T=ROT.filter(t=>t.quem===q&&(t.dias||[]).includes(dow)).sort((a,b)=>hkey(a.inicio)-hkey(b.inicio));
+ const dt=iso(dateOf(dow));const isToday=dt===iso(hoje);const nowm=hoje.getHours()*60+hoje.getMinutes();
+ T.forEach(t=>{
+  const key=dt+'_'+t.id;const row=el('div','task');if(mem[key])row.classList.add('done');
+  if(q==='fred'&&isToday&&nowm>=hkey(t.inicio)&&nowm<hkey(t.fim))row.classList.add('now');
+  const h=el('div','h',t.inicio);if(t.fim)h.appendChild(el('em',null,'até '+t.fim));row.appendChild(h);
+  const tt=el('div');tt.appendChild(el('div','tt',t.titulo));if(t.nota)tt.appendChild(el('div','nn',t.nota));row.appendChild(tt);
+  if(isToday){const c=el('input');c.type='checkbox';c.checked=!!mem[key];c.setAttribute('aria-label','Marcar feito: '+t.titulo);
+   c.onchange=()=>{if(c.checked)mem[key]=1;else delete mem[key];save();row.classList.toggle('done',c.checked)};row.appendChild(c)}
+  else row.appendChild(el('span'));
+  box.appendChild(row)});
+ return box}
+function render(){renderDias();const b=$('#turnos');b.textContent='';const g=el('div','shifts');g.append(shift('fred',dia),shift('noite',dia));b.appendChild(g);
+ $('#leg').textContent='As marcações de "feito" ficam só neste aparelho. Tarefas da madrugada (00:00 a 06:59) pertencem ao turno que começou na noite anterior.'}
+render();
+</script></body></html>
